@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,6 +22,8 @@ public class MainViewModel : INotifyPropertyChanged
         _settings = Settings.Load();
         Port = _settings.Port;
         TargetUrl = _settings.TargetUrl;
+        FirewallRuleName = _settings.FirewallRuleName;
+        UseHttps = _settings.UseHttps;
         UpdateWiFiIP();
     }
 
@@ -68,6 +71,35 @@ public class MainViewModel : INotifyPropertyChanged
             {
                 _targetUrl = value;
                 OnPropertyChanged();
+            }
+        }
+    }
+
+    private string _firewallRuleName = "AAProxyRule";
+    public string FirewallRuleName
+    {
+        get => _firewallRuleName;
+        set
+        {
+            if (_firewallRuleName != value)
+            {
+                _firewallRuleName = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool _useHttps = true;
+    public bool UseHttps
+    {
+        get => _useHttps;
+        set
+        {
+            if (_useHttps != value)
+            {
+                _useHttps = value;
+                OnPropertyChanged();
+                UpdateConnectionUrl();
             }
         }
     }
@@ -128,13 +160,14 @@ public class MainViewModel : INotifyPropertyChanged
 
     private void UpdateConnectionUrl()
     {
+        var protocol = UseHttps ? "https" : "http";
         if (!string.IsNullOrEmpty(WiFiIP) && WiFiIP != "找不到 Wi-Fi")
         {
-            ConnectionUrl = $"https://{WiFiIP}:{Port}";
+            ConnectionUrl = $"{protocol}://{WiFiIP}:{Port}";
         }
         else
         {
-            ConnectionUrl = $"https://localhost:{Port}";
+            ConnectionUrl = $"{protocol}://localhost:{Port}";
         }
     }
 
@@ -182,22 +215,28 @@ public class MainViewModel : INotifyPropertyChanged
             // 儲存設定
             _settings.Port = Port;
             _settings.TargetUrl = TargetUrl;
+            _settings.FirewallRuleName = FirewallRuleName;
+            _settings.UseHttps = UseHttps;
             _settings.Save();
 
             // 取得所有 IP
             var allIPs = NetworkHelper.GetAllIPs().Select(x => x.IP).ToList();
 
-            // 產生憑證
-            var cert = CertificateGenerator.GenerateSelfSignedCertificate(allIPs);
+            // 產生憑證 (僅在使用 HTTPS 時)
+            X509Certificate2? cert = null;
+            if (UseHttps)
+            {
+                cert = CertificateGenerator.GenerateSelfSignedCertificate(allIPs);
+            }
 
             // 新增防火牆規則
-            if (!FirewallManager.AddRule(Port))
+            if (!FirewallManager.AddRule(Port, FirewallRuleName))
             {
                 AddLog("警告: 無法新增防火牆規則");
             }
 
             // 建立並啟動伺服器
-            _server = new ProxyServer(Port, TargetUrl, cert);
+            _server = new ProxyServer(Port, TargetUrl, cert, UseHttps);
             _server.OnRequest += entry =>
             {
                 Application.Current.Dispatcher.Invoke(() =>

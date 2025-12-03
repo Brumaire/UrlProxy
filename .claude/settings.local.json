@@ -4,7 +4,9 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git -C \"d:/MyCshape/UrlProxy\" init)",
-      "Bash(git -C \"d:/MyCshape/UrlProxy\" status)"
+      "Bash(git -C \"d:/MyCshape/UrlProxy\" status)",
+      "Bash(dotnet build:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

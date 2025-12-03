@@ -90,6 +90,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Port: "
@@ -100,11 +102,25 @@
                              Padding="5" Margin="0,0,0,5"/>
 
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="目標 API: "
-                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                               VerticalAlignment="Center" Margin="0,0,10,5"/>
                     <TextBox Grid.Row="1" Grid.Column="1"
                              Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
                              IsEnabled="{Binding CanEditSettings}"
-                             Padding="5"/>
+                             Padding="5" Margin="0,0,0,5"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="防火牆規則: "
+                               VerticalAlignment="Center" Margin="0,0,10,5"/>
+                    <TextBox Grid.Row="2" Grid.Column="1"
+                             Text="{Binding FirewallRuleName, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding CanEditSettings}"
+                             Padding="5" Margin="0,0,0,5"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="使用 HTTPS: "
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <CheckBox Grid.Row="3" Grid.Column="1"
+                              IsChecked="{Binding UseHttps}"
+                              IsEnabled="{Binding CanEditSettings}"
+                              VerticalAlignment="Center"/>
                 </Grid>
             </StackPanel>
         </Border>
