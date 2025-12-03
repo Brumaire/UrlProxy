@@ -13,20 +13,22 @@ namespace UrlProxy.Services;
 public class ProxyServer : IDisposable
 {
     private WebApplication? _app;
-    private readonly X509Certificate2 _certificate;
+    private readonly X509Certificate2? _certificate;
     private Task? _runTask;
 
     public int Port { get; }
     public string TargetUrl { get; }
+    public bool UseHttps { get; }
     public bool IsRunning { get; private set; }
 
     public event Action<LogEntry>? OnRequest;
 
-    public ProxyServer(int port, string targetUrl, X509Certificate2 certificate)
+    public ProxyServer(int port, string targetUrl, X509Certificate2? certificate, bool useHttps = true)
     {
         Port = port;
         TargetUrl = targetUrl.TrimEnd('/');
         _certificate = certificate;
+        UseHttps = useHttps;
     }
 
     public void Start()
@@ -42,7 +44,10 @@ public class ProxyServer : IDisposable
             {
                 options.Listen(IPAddress.Any, Port, listenOptions =>
                 {
-                    listenOptions.UseHttps(_certificate);
+                    if (UseHttps && _certificate != null)
+                    {
+                        listenOptions.UseHttps(_certificate);
+                    }
                 });
             });
 

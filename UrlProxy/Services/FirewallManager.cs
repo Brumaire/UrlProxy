@@ -4,16 +4,21 @@ namespace UrlProxy.Services;
 
 public static class FirewallManager
 {
-    private const string RuleName = "AATest";
+    private static string _ruleName = "AAProxyRule";
 
-    public static bool AddRule(int port)
+    public static bool AddRule(int port, string? ruleName = null)
     {
+        if (!string.IsNullOrWhiteSpace(ruleName))
+        {
+            _ruleName = ruleName;
+        }
+
         try
         {
             var psi = new ProcessStartInfo
             {
                 FileName = "netsh",
-                Arguments = $"advfirewall firewall add rule name=\"{RuleName}\" dir=in action=allow protocol=tcp localport={port}",
+                Arguments = $"advfirewall firewall add rule name=\"{_ruleName}\" dir=in action=allow protocol=tcp localport={port}",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
@@ -37,7 +42,7 @@ public static class FirewallManager
             var psi = new ProcessStartInfo
             {
                 FileName = "netsh",
-                Arguments = $"advfirewall firewall delete rule name=\"{RuleName}\"",
+                Arguments = $"advfirewall firewall delete rule name=\"{_ruleName}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,

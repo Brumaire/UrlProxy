@@ -7,6 +7,8 @@ public class Settings
 {
     public int Port { get; set; } = 3000;
     public string TargetUrl { get; set; } = "http://localhost:5059";
+    public string FirewallRuleName { get; set; } = "AAProxyRule";
+    public bool UseHttps { get; set; } = true;
 
     private static readonly string SettingsPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
