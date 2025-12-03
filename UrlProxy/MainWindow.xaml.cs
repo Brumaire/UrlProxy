@@ -76,7 +76,7 @@ public partial class MainWindow : Window
         if (WindowState == WindowState.Minimized)
         {
             Hide();
-            TrayIcon.ShowBalloonTip("API Proxy Server", "程式已最小化到系統匣", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            TrayIcon.ShowBalloonTip("UrlProxy", "程式已最小化到系統匣", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
         }
     }
 
@@ -86,7 +86,7 @@ public partial class MainWindow : Window
         {
             e.Cancel = true;
             Hide();
-            TrayIcon.ShowBalloonTip("API Proxy Server", "程式已最小化到系統匣", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            TrayIcon.ShowBalloonTip("UrlProxy", "程式已最小化到系統匣", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
         }
         else
         {
