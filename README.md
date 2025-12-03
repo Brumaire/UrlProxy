@@ -72,7 +72,7 @@ Download the latest version from the [Releases](../../releases) page.
 ### Option 2: Build from Source
 
 ```bash
-git clone https://github.com/yourusername/UrlProxy.git
+git clone https://github.com/Brumaire/UrlProxy.git
 cd UrlProxy
 dotnet build
 dotnet run --project UrlProxy/UrlProxy.csproj
