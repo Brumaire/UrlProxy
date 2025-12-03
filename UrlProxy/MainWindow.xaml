@@ -19,14 +19,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- 上半部：控制區 -->
+        <!-- Top: Control Area -->
         <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- 左側：QR Code + 按鈕 -->
+            <!-- Left: QR Code + Button -->
             <StackPanel Grid.Column="0" Margin="0,0,20,0">
                 <Border Background="White" CornerRadius="8" Padding="8"
                         BorderBrush="#E0E0E0" BorderThickness="1">
@@ -41,10 +41,10 @@
                         Click="ToggleServer_Click"/>
             </StackPanel>
 
-            <!-- 右側：代理伺服器資訊 + 設定 -->
+            <!-- Right: Proxy Server Info + Settings -->
             <Border Grid.Column="1" Background="#F8F8F8" CornerRadius="8" Padding="15">
                 <StackPanel>
-                    <!-- 狀態列 -->
+                    <!-- Status -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <Ellipse Width="10" Height="10"
                                  Fill="{Binding StatusColor}"
@@ -54,8 +54,8 @@
                                    Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <!-- 代理伺服器資訊 -->
-                    <TextBlock Text="代理伺服器（手機連線用）" FontSize="12" FontWeight="SemiBold"
+                    <!-- Proxy Server Info -->
+                    <TextBlock Text="Proxy Server (for mobile connection)" FontSize="12" FontWeight="SemiBold"
                                Foreground="#555" Margin="0,0,0,8"/>
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
@@ -68,29 +68,29 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="本機 IP"
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Local IP"
                                    Foreground="#888" FontSize="12" Margin="0,0,0,4"/>
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding WiFiIP}"
                                    FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
-                        <Button Grid.Row="0" Grid.Column="2" Content="複製"
+                        <Button Grid.Row="0" Grid.Column="2" Content="Copy"
                                 Style="{StaticResource SmallButton}"
                                 Click="CopyIP_Click" Margin="0,0,0,4"/>
 
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="連線網址"
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="URL"
                                    Foreground="#888" FontSize="12"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ConnectionUrl}"
                                    FontSize="12" FontWeight="SemiBold"
                                    TextTrimming="CharacterEllipsis"/>
-                        <Button Grid.Row="1" Grid.Column="2" Content="複製"
+                        <Button Grid.Row="1" Grid.Column="2" Content="Copy"
                                 Style="{StaticResource SmallButton}"
                                 Click="CopyUrl_Click"/>
                     </Grid>
 
-                    <!-- 設定（收合式） -->
-                    <Expander Header="設定" IsExpanded="False">
+                    <!-- Settings (Collapsible) -->
+                    <Expander Header="Settings" IsExpanded="False">
                         <StackPanel Margin="0,10,0,0">
-                            <!-- 代理伺服器設定 -->
-                            <TextBlock Text="▸ 代理伺服器" FontSize="11" FontWeight="SemiBold"
+                            <!-- Proxy Server Settings -->
+                            <TextBlock Text="▸ Proxy Server" FontSize="11" FontWeight="SemiBold"
                                        Foreground="#666" Margin="0,0,0,8"/>
                             <Grid Margin="10,0,0,12">
                                 <Grid.ColumnDefinitions>
@@ -103,21 +103,21 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="監聽 Port"
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Listen Port"
                                            VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
                                 <TextBox Grid.Row="0" Grid.Column="1"
                                          Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
                                          IsEnabled="{Binding CanEditSettings}"
                                          Padding="6,4" Margin="0,0,0,6" FontSize="12"/>
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="使用 HTTPS"
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Use HTTPS"
                                            VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
                                 <CheckBox Grid.Row="1" Grid.Column="1"
                                           IsChecked="{Binding UseHttps}"
                                           IsEnabled="{Binding CanEditSettings}"
                                           VerticalAlignment="Center" Margin="0,0,0,6"/>
 
-                                <TextBlock Grid.Row="2" Grid.Column="0" Text="防火牆規則"
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Firewall Rule"
                                            VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
                                 <TextBox Grid.Row="2" Grid.Column="1"
                                          Text="{Binding FirewallRuleName, UpdateSourceTrigger=PropertyChanged}"
@@ -125,8 +125,8 @@
                                          Padding="6,4" FontSize="12"/>
                             </Grid>
 
-                            <!-- 轉發目標設定 -->
-                            <TextBlock Text="▸ 轉發目標（本機 API）" FontSize="11" FontWeight="SemiBold"
+                            <!-- Forward Target Settings -->
+                            <TextBlock Text="▸ Forward Target (Local API)" FontSize="11" FontWeight="SemiBold"
                                        Foreground="#666" Margin="0,0,0,8"/>
                             <Grid Margin="10,0,0,0">
                                 <Grid.ColumnDefinitions>
@@ -134,7 +134,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="API 網址"
+                                <TextBlock Grid.Column="0" Text="API URL"
                                            VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
                                 <TextBox Grid.Column="1"
                                          Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
@@ -147,7 +147,7 @@
             </Border>
         </Grid>
 
-        <!-- 下半部：連線記錄 -->
+        <!-- Bottom: Logs -->
         <Border Grid.Row="1" Background="#F8F8F8" CornerRadius="8" Padding="15">
             <Grid>
                 <Grid.RowDefinitions>
@@ -156,9 +156,9 @@
                 </Grid.RowDefinitions>
 
                 <DockPanel Grid.Row="0" Margin="0,0,0,10">
-                    <TextBlock Text="連線記錄" FontSize="13" FontWeight="SemiBold"
+                    <TextBlock Text="Logs" FontSize="13" FontWeight="SemiBold"
                                Foreground="#333" VerticalAlignment="Center"/>
-                    <Button Content="清除" Style="{StaticResource SmallButton}"
+                    <Button Content="Clear" Style="{StaticResource SmallButton}"
                             HorizontalAlignment="Right"
                             Click="ClearLogs_Click"/>
                 </DockPanel>
@@ -179,17 +179,17 @@
             </Grid>
         </Border>
 
-        <!-- 系統匣圖示 -->
+        <!-- System Tray Icon -->
         <tb:TaskbarIcon x:Name="TrayIcon"
                         ToolTipText="UrlProxy"
                         DoubleClickCommand="{Binding}"
                         TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="開啟主視窗" Click="ShowWindow_Click"/>
-                    <MenuItem Header="啟動/停止" Click="ToggleServer_Click"/>
+                    <MenuItem Header="Show Window" Click="ShowWindow_Click"/>
+                    <MenuItem Header="Start/Stop" Click="ToggleServer_Click"/>
                     <Separator/>
-                    <MenuItem Header="結束" Click="Exit_Click"/>
+                    <MenuItem Header="Exit" Click="Exit_Click"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>

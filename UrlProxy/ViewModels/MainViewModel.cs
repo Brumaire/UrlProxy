@@ -49,9 +49,9 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
-    public string StatusText => IsRunning ? "運行中" : "已停止";
+    public string StatusText => IsRunning ? "Running" : "Stopped";
     public Brush StatusColor => IsRunning ? Brushes.LimeGreen : Brushes.Red;
-    public string ButtonText => IsRunning ? "停止" : "啟動";
+    public string ButtonText => IsRunning ? "Stop" : "Start";
     public bool CanEditSettings => !IsRunning;
 
     #endregion
@@ -162,7 +162,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     public void UpdateWiFiIP()
     {
-        WiFiIP = NetworkHelper.GetWiFiIP() ?? "找不到 Wi-Fi";
+        WiFiIP = NetworkHelper.GetWiFiIP() ?? "No Wi-Fi found";
     }
 
     public void ToggleServer()
@@ -196,7 +196,7 @@ public class MainViewModel : INotifyPropertyChanged
         }
         catch
         {
-            // 忽略剪貼簿錯誤
+            // Ignore clipboard errors
         }
     }
 
@@ -212,7 +212,7 @@ public class MainViewModel : INotifyPropertyChanged
     private void UpdateConnectionUrl()
     {
         var protocol = UseHttps ? "https" : "http";
-        var host = !string.IsNullOrEmpty(WiFiIP) && WiFiIP != "找不到 Wi-Fi"
+        var host = !string.IsNullOrEmpty(WiFiIP) && WiFiIP != "No Wi-Fi found"
             ? WiFiIP
             : "localhost";
         ConnectionUrl = $"{protocol}://{host}:{Port}";
@@ -251,30 +251,30 @@ public class MainViewModel : INotifyPropertyChanged
 
             var allIPs = NetworkHelper.GetAllIPs().Select(x => x.IP).ToList();
 
-            // 產生憑證（僅 HTTPS）
+            // Generate certificate (HTTPS only)
             X509Certificate2? cert = null;
             if (UseHttps)
                 cert = CertificateGenerator.GenerateSelfSignedCertificate(allIPs);
 
-            // 新增防火牆規則
+            // Add firewall rule
             if (FirewallManager.AddRule(Port, FirewallRuleName))
-                AddLog($"防火牆規則已開啟: {FirewallRuleName}");
+                AddLog($"Firewall rule enabled: {FirewallRuleName}");
             else
-                AddLog("警告: 無法新增防火牆規則");
+                AddLog("Warning: Failed to add firewall rule");
 
-            // 建立並啟動伺服器
+            // Create and start server
             _server = new ProxyServer(Port, TargetUrl, cert, UseHttps);
             _server.OnRequest += OnServerRequest;
             _server.Start();
 
             IsRunning = true;
-            AddLog($"代理目標: {TargetUrl}");
-            AddLog($"伺服器已啟動: {ConnectionUrl}");
+            AddLog($"Forward target: {TargetUrl}");
+            AddLog($"Server started: {ConnectionUrl}");
         }
         catch (Exception ex)
         {
-            AddLog($"錯誤: {ex.Message}");
-            MessageBox.Show($"啟動失敗: {ex.Message}", "錯誤", MessageBoxButton.OK, MessageBoxImage.Error);
+            AddLog($"Error: {ex.Message}");
+            MessageBox.Show($"Failed to start: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -286,16 +286,16 @@ public class MainViewModel : INotifyPropertyChanged
             _server?.Dispose();
             _server = null;
 
-            // 移除防火牆規則
+            // Remove firewall rule
             if (FirewallManager.RemoveRule())
-                AddLog("防火牆規則已關閉");
+                AddLog("Firewall rule disabled");
 
             IsRunning = false;
-            AddLog("伺服器已停止");
+            AddLog("Server stopped");
         }
         catch (Exception ex)
         {
-            AddLog($"錯誤: {ex.Message}");
+            AddLog($"Error: {ex.Message}");
         }
     }
 

@@ -53,7 +53,7 @@ public partial class MainWindow : Window
         if (!string.IsNullOrEmpty(_viewModel.WiFiIP))
         {
             _viewModel.CopyToClipboard(_viewModel.WiFiIP);
-            _viewModel.AddLog("已複製 IP 到剪貼簿");
+            _viewModel.AddLog("IP copied to clipboard");
         }
     }
 
@@ -62,7 +62,7 @@ public partial class MainWindow : Window
         if (!string.IsNullOrEmpty(_viewModel.ConnectionUrl))
         {
             _viewModel.CopyToClipboard(_viewModel.ConnectionUrl);
-            _viewModel.AddLog("已複製網址到剪貼簿");
+            _viewModel.AddLog("URL copied to clipboard");
         }
     }
 
@@ -76,7 +76,7 @@ public partial class MainWindow : Window
         if (WindowState == WindowState.Minimized)
         {
             Hide();
-            TrayIcon.ShowBalloonTip("UrlProxy", "程式已最小化到系統匣", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            TrayIcon.ShowBalloonTip("UrlProxy", "Minimized to system tray", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
         }
     }
 
@@ -86,7 +86,7 @@ public partial class MainWindow : Window
         {
             e.Cancel = true;
             Hide();
-            TrayIcon.ShowBalloonTip("UrlProxy", "程式已最小化到系統匣", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            TrayIcon.ShowBalloonTip("UrlProxy", "Minimized to system tray", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
         }
         else
         {
