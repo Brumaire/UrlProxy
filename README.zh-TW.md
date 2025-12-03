@@ -2,6 +2,8 @@
 
 一個 Windows 桌面應用程式，讓行動裝置可以透過 Wi-Fi 連線到本機開發中的 API 伺服器。
 
+[English README](README.md)
+
 ## 解決的問題
 
 在開發 API 時，經常需要用手機測試。但 IIS Express 或其他本機開發伺服器通常只綁定 `localhost`，手機無法直接連線。
@@ -30,19 +32,19 @@
 ┌─────────────────────────────────────────────┐
 │  UrlProxy                                   │
 ├─────────────────────────────────────────────┤
-│  ┌─────────┐  ● 運行中                      │
+│  ┌─────────┐  ● Running                     │
 │  │ QR Code │                                │
-│  │         │  代理伺服器（手機連線用）        │
-│  └─────────┘  本機 IP    192.168.1.100      │
-│  [  啟動  ]   連線網址   https://192.168... │
+│  │         │  Proxy Server (for mobile)     │
+│  └─────────┘  Local IP   192.168.1.100      │
+│  [  Start  ]  URL        https://192.168... │
 │                                             │
-│               ▸ 設定                        │
+│               ▸ Settings                    │
 ├─────────────────────────────────────────────┤
-│  連線記錄                          [清除]   │
+│  Logs                              [Clear]  │
 │  ┌─────────────────────────────────────┐   │
-│  │ 12:34:56 伺服器已啟動: https://...  │   │
-│  │ 12:34:56 代理目標: http://localho...│   │
-│  │ 12:34:55 防火牆規則已開啟: AAProxy..│   │
+│  │ 12:34:56 Server started: https://...│   │
+│  │ 12:34:56 Forward target: http://... │   │
+│  │ 12:34:55 Firewall rule enabled: ... │   │
 │  └─────────────────────────────────────┘   │
 └─────────────────────────────────────────────┘
 ```
@@ -51,8 +53,8 @@
 
 1. 啟動你的本機 API 伺服器（例如 IIS Express）
 2. 開啟 UrlProxy
-3. 在「設定 → 轉發目標」輸入本機 API 網址（例如 `http://localhost:5059`）
-4. 點擊「啟動」
+3. 在「Settings → Forward Target」輸入本機 API 網址（例如 `http://localhost:5059`）
+4. 點擊「Start」
 5. 手機掃描 QR Code 或輸入連線網址即可存取 API
 
 ## 系統需求
@@ -70,7 +72,7 @@
 ### 方式二：從原始碼建置
 
 ```bash
-git clone https://github.com/yourusername/UrlProxy.git
+git clone https://github.com/Brumaire/UrlProxy.git
 cd UrlProxy
 dotnet build
 dotnet run --project UrlProxy/UrlProxy.csproj
@@ -80,26 +82,26 @@ dotnet run --project UrlProxy/UrlProxy.csproj
 
 | 設定項目 | 說明 |
 |---------|------|
-| 監聽 Port | 代理伺服器的監聽埠（預設 3000） |
-| 使用 HTTPS | 是否啟用 HTTPS（預設開啟） |
-| 防火牆規則 | Windows 防火牆規則名稱 |
-| API 網址 | 要轉發的本機 API 位址 |
+| Listen Port | 代理伺服器的監聽埠（預設 3000） |
+| Use HTTPS | 是否啟用 HTTPS（預設開啟） |
+| Firewall Rule | Windows 防火牆規則名稱 |
+| API URL | 要轉發的本機 API 位址 |
 
 ## 運作原理
 
 ```
-手機/客戶端                    UrlProxy                      本機 API
-     │                           │                              │
-     │  GET /api/users           │                              │
-     │ ────────────────────────► │                              │
-     │  https://192.168.1.x:3000 │   GET /api/users             │
-     │                           │ ───────────────────────────► │
-     │                           │   http://localhost:5059      │
-     │                           │                              │
-     │                           │   200 OK                     │
-     │   200 OK                  │ ◄─────────────────────────── │
-     │ ◄──────────────────────── │                              │
-     │                           │                              │
+手機/客戶端                      UrlProxy                        本機 API
+     │                              │                               │
+     │  GET /api/users              │                               │
+     │ ───────────────────────────► │                               │
+     │  https://192.168.1.x:3000    │   GET /api/users              │
+     │                              │ ────────────────────────────► │
+     │                              │   http://localhost:5059       │
+     │                              │                               │
+     │                              │   200 OK                      │
+     │   200 OK                     │ ◄──────────────────────────── │
+     │ ◄─────────────────────────── │                               │
+     │                              │                               │
 ```
 
 ## 技術細節
