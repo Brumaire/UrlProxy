@@ -1,0 +1,157 @@
+<Window x:Class="UrlProxy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        Title="API Proxy Server"
+        Height="550" Width="450"
+        MinHeight="500" MinWidth="400"
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing"
+        StateChanged="Window_StateChanged">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 狀態區 -->
+        <Border Grid.Row="0" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- QR Code -->
+                <Border Grid.Column="0" Background="White" CornerRadius="5" Padding="5" Margin="0,0,15,0">
+                    <Image x:Name="QRCodeImage"
+                           Source="{Binding QRCodeImage}"
+                           Width="100" Height="100"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                </Border>
+
+                <!-- 狀態資訊 -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <!-- 狀態 -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="狀態: " FontSize="14"/>
+                        <Ellipse Width="12" Height="12"
+                                 Fill="{Binding StatusColor}"
+                                 Margin="0,2,5,0"/>
+                        <TextBlock Text="{Binding StatusText}"
+                                   FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <!-- Wi-Fi IP -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="Wi-Fi IP: " FontSize="12" Foreground="#666"/>
+                        <TextBlock Text="{Binding WiFiIP}" FontSize="12" FontWeight="SemiBold"/>
+                        <Button Content="複製" Style="{StaticResource SmallButton}"
+                                Margin="10,0,0,0"
+                                Click="CopyIP_Click"/>
+                    </StackPanel>
+
+                    <!-- 連線網址 -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="網址: " FontSize="12" Foreground="#666"/>
+                        <TextBlock Text="{Binding ConnectionUrl}" FontSize="12" FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis" MaxWidth="180"/>
+                        <Button Content="複製" Style="{StaticResource SmallButton}"
+                                Margin="10,0,0,0"
+                                Click="CopyUrl_Click"/>
+                    </StackPanel>
+
+                    <!-- 啟動/停止按鈕 -->
+                    <Button Content="{Binding ButtonText}"
+                            Style="{StaticResource PrimaryButton}"
+                            Margin="0,15,0,0"
+                            Click="ToggleServer_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 設定區 -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <StackPanel>
+                <TextBlock Text="設定" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Port: "
+                               VerticalAlignment="Center" Margin="0,0,10,5"/>
+                    <TextBox Grid.Row="0" Grid.Column="1"
+                             Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding CanEditSettings}"
+                             Padding="5" Margin="0,0,0,5"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="目標 API: "
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBox Grid.Row="1" Grid.Column="1"
+                             Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
+                             IsEnabled="{Binding CanEditSettings}"
+                             Padding="5"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- 連線記錄 -->
+        <Border Grid.Row="2" Grid.RowSpan="2" Background="#F5F5F5" CornerRadius="8" Padding="15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="連線記錄" FontSize="14" FontWeight="Bold"/>
+                    <Button Content="清除" Style="{StaticResource SmallButton}"
+                            HorizontalAlignment="Right"
+                            Click="ClearLogs_Click"/>
+                </DockPanel>
+
+                <ListBox Grid.Row="1"
+                         ItemsSource="{Binding Logs}"
+                         FontFamily="Consolas"
+                         FontSize="11"
+                         BorderThickness="1"
+                         BorderBrush="#DDD">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- 系統匣圖示 -->
+        <tb:TaskbarIcon x:Name="TrayIcon"
+                        ToolTipText="API Proxy Server"
+                        DoubleClickCommand="{Binding}"
+                        TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="開啟主視窗" Click="ShowWindow_Click"/>
+                    <MenuItem Header="啟動/停止" Click="ToggleServer_Click"/>
+                    <Separator/>
+                    <MenuItem Header="結束" Click="Exit_Click"/>
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+    </Grid>
+</Window>
