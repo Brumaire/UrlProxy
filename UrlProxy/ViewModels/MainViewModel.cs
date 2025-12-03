@@ -230,7 +230,11 @@ public class MainViewModel : INotifyPropertyChanged
             }
 
             // 新增防火牆規則
-            if (!FirewallManager.AddRule(Port, FirewallRuleName))
+            if (FirewallManager.AddRule(Port, FirewallRuleName))
+            {
+                AddLog($"防火牆規則已開啟: {FirewallRuleName}");
+            }
+            else
             {
                 AddLog("警告: 無法新增防火牆規則");
             }
@@ -248,7 +252,8 @@ public class MainViewModel : INotifyPropertyChanged
             _server.Start();
 
             IsRunning = true;
-            AddLog($"伺服器已啟動 - Port {Port}");
+            AddLog($"代理目標: {TargetUrl}");
+            AddLog($"伺服器已啟動: {ConnectionUrl}");
         }
         catch (Exception ex)
         {
@@ -266,7 +271,10 @@ public class MainViewModel : INotifyPropertyChanged
             _server = null;
 
             // 移除防火牆規則
-            FirewallManager.RemoveRule();
+            if (FirewallManager.RemoveRule())
+            {
+                AddLog("防火牆規則已關閉");
+            }
 
             IsRunning = false;
             AddLog("伺服器已停止");
