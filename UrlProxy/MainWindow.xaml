@@ -4,7 +4,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         Title="API Proxy Server"
         Height="600" Width="600"
-        MinHeight="550" MinWidth="450"
+        MinHeight="550" MinWidth="500"
         WindowStartupLocation="CenterScreen"
         Closing="Window_Closing"
         StateChanged="Window_StateChanged">
@@ -19,7 +19,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- 上半部：狀態 + 設定 並排 -->
+        <!-- 上半部：控制區 -->
         <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -41,17 +41,11 @@
                         Click="ToggleServer_Click"/>
             </StackPanel>
 
-            <!-- 右側：狀態 + 設定 -->
+            <!-- 右側：代理伺服器資訊 + 設定 -->
             <Border Grid.Column="1" Background="#F8F8F8" CornerRadius="8" Padding="15">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
+                <StackPanel>
                     <!-- 狀態列 -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                         <Ellipse Width="10" Height="10"
                                  Fill="{Binding StatusColor}"
                                  VerticalAlignment="Center"/>
@@ -60,10 +54,12 @@
                                    Margin="8,0,0,0" VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <!-- 連線資訊 -->
-                    <Grid Grid.Row="1" Margin="0,0,0,15">
+                    <!-- 代理伺服器資訊 -->
+                    <TextBlock Text="代理伺服器（手機連線用）" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555" Margin="0,0,0,8"/>
+                    <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
@@ -72,7 +68,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="IP"
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="本機 IP"
                                    Foreground="#888" FontSize="12" Margin="0,0,0,4"/>
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding WiFiIP}"
                                    FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
@@ -80,7 +76,7 @@
                                 Style="{StaticResource SmallButton}"
                                 Click="CopyIP_Click" Margin="0,0,0,4"/>
 
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="網址"
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="連線網址"
                                    Foreground="#888" FontSize="12"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ConnectionUrl}"
                                    FontSize="12" FontWeight="SemiBold"
@@ -90,54 +86,68 @@
                                 Click="CopyUrl_Click"/>
                     </Grid>
 
-                    <!-- 設定 (收合式) -->
-                    <Expander Grid.Row="2" Header="設定" IsExpanded="False">
-                        <Grid Margin="0,10,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="70"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                    <!-- 設定（收合式） -->
+                    <Expander Header="設定" IsExpanded="False">
+                        <StackPanel Margin="0,10,0,0">
+                            <!-- 代理伺服器設定 -->
+                            <TextBlock Text="▸ 代理伺服器" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="#666" Margin="0,0,0,8"/>
+                            <Grid Margin="10,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Port"
-                                       VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
-                            <TextBox Grid.Row="0" Grid.Column="1"
-                                     Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding CanEditSettings}"
-                                     Padding="6,4" Margin="0,0,0,8" FontSize="12"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="監聽 Port"
+                                           VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
+                                <TextBox Grid.Row="0" Grid.Column="1"
+                                         Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditSettings}"
+                                         Padding="6,4" Margin="0,0,0,6" FontSize="12"/>
 
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="目標 API"
-                                       VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
-                            <TextBox Grid.Row="1" Grid.Column="1"
-                                     Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding CanEditSettings}"
-                                     Padding="6,4" Margin="0,0,0,8" FontSize="12"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="使用 HTTPS"
+                                           VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
+                                <CheckBox Grid.Row="1" Grid.Column="1"
+                                          IsChecked="{Binding UseHttps}"
+                                          IsEnabled="{Binding CanEditSettings}"
+                                          VerticalAlignment="Center" Margin="0,0,0,6"/>
 
-                            <TextBlock Grid.Row="2" Grid.Column="0" Text="防火牆"
-                                       VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
-                            <TextBox Grid.Row="2" Grid.Column="1"
-                                     Text="{Binding FirewallRuleName, UpdateSourceTrigger=PropertyChanged}"
-                                     IsEnabled="{Binding CanEditSettings}"
-                                     Padding="6,4" Margin="0,0,0,8" FontSize="12"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="防火牆規則"
+                                           VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
+                                <TextBox Grid.Row="2" Grid.Column="1"
+                                         Text="{Binding FirewallRuleName, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditSettings}"
+                                         Padding="6,4" FontSize="12"/>
+                            </Grid>
 
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="HTTPS"
-                                       VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
-                            <CheckBox Grid.Row="3" Grid.Column="1"
-                                      IsChecked="{Binding UseHttps}"
-                                      IsEnabled="{Binding CanEditSettings}"
-                                      VerticalAlignment="Center"/>
-                        </Grid>
+                            <!-- 轉發目標設定 -->
+                            <TextBlock Text="▸ 轉發目標（本機 API）" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="#666" Margin="0,0,0,8"/>
+                            <Grid Margin="10,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="API 網址"
+                                           VerticalAlignment="Center" Foreground="#666" FontSize="12"/>
+                                <TextBox Grid.Column="1"
+                                         Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditSettings}"
+                                         Padding="6,4" FontSize="12"/>
+                            </Grid>
+                        </StackPanel>
                     </Expander>
-                </Grid>
+                </StackPanel>
             </Border>
         </Grid>
 
-        <!-- 下半部：連線記錄 (佔滿剩餘空間) -->
+        <!-- 下半部：連線記錄 -->
         <Border Grid.Row="1" Background="#F8F8F8" CornerRadius="8" Padding="15">
             <Grid>
                 <Grid.RowDefinitions>
