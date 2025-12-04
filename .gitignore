@@ -28,3 +28,7 @@ Desktop.ini
 # Application specific
 *.pfx
 *.cer
+
+# Claude Code
+.claude/
+CLAUDE.md
